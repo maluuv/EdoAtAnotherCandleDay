@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>#EdoAtAnotherCandleDay</title>
+
+<!-- CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.8.1/dist/sweetalert2.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+  .kotak { margin-top: 180px; }
+  .disabled-heart { pointer-events: none; opacity: 0.4; }
+
+  .celebration-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
+  /* Cake */
+  .cake { position: relative; width: 180px; margin-bottom: 20px; }
+  .cake-layer-top {
+    position: relative;
+    width: 150px;
+    height: 30px;
+    margin: 0 auto;
+    border-radius: 15px 15px 10px 10px;
+    background: linear-gradient(145deg, #ffb6c1, #ff69b4);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    opacity:0; transition: opacity 0.5s;
+  }
+  .cake-layer-middle {
+    width: 140px;
+    height: 25px;
+    margin: 0 auto;
+    border-radius: 12px 12px 8px 8px;
+    background: linear-gradient(145deg, #ffc0cb, #ff69b4);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    opacity:0; transition: opacity 0.5s;
+  }
+  .cake-base {
+    width: 180px;
+    height: 25px;
+    margin: 0 auto;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #8b4513, #a0522d);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+    opacity:0; transition: opacity 0.5s;
+  }
+
+  /* Cream drip */
+  .cream-leak {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(to bottom, #fffacd, #fff);
+    border-radius: 50% 50% 50% 50%;
+    box-shadow: inset 0 -4px 6px rgba(255,255,255,0.6);
+    z-index: 1;
+    opacity:0; transition: opacity 0.5s;
+  }
+
+  /* Lilin angka */
+  .candle-number {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ff4500;
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity:0;
+    animation: flicker 0.5s infinite alternate;
+    text-shadow: 0 0 10px #ffd700, 0 0 15px #ffa500;
+  }
+
+  @keyframes flicker {
+    0% { color: orange; text-shadow: 0 0 5px yellow; }
+    50% { color: gold; text-shadow: 0 0 10px yellow; }
+    100% { color: orange; text-shadow: 0 0 5px yellow; }
+  }
+
+  .birthday-text { font-size: 28px; font-weight: bold; margin-top: 15px; opacity:0; transition: opacity 0.5s; }
+  .final-text { display: none; text-align: center; font-size: 28px; line-height:1.6; font-weight:bold; }
+
+  /* Balon */
+  .balloon {
+    position: absolute;
+    bottom: -50px;
+    width: 30px;
+    height: 40px;
+    border-radius: 50%;
+    opacity: 0.9;
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-lg text-center kotak">
+      <div id="opening" class="mb-4 animate__animated animate__fadeIn">
+        <h4>Hi Abang.</h4>
+        <p>If you’re here, you followed the clues correctly.<br />Welcome to your day.</p>
+        <small class="text-muted">#EdoAtAnotherCandleDay</small>
+      </div>
+
+      <button type="button" class="btn btn-lg btn-primary tombol py-4 px-5 shadow">Click here!</button>
+
+      <div id="finalText" class="final-text">
+        Aku sayang kamu Abang 💖<br />
+        This little chaos exists only today.<br />
+        #EdoAtAnotherCandleDay<br /><br />
+        The next clue is waiting for you on WhatsApp.
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="fixed-bottom text-center py-3 text-secondary">
+  <small>
+    Made with
+    <i class="fas fa-heart text-danger animate__animated animate__heartBeat animate__repeat-3 hati disabled-heart"></i>
+    by LOVE
+  </small>
+</footer>
+
+<script src="https://kit.fontawesome.com/61e5120832.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.8.1/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+let nama, val;
+const url = new URL(document.URL);
+const sender = url.searchParams.get("by") || "ataa";
+let heartUnlocked = false;
+let finalTextShown = false;
+
+const tombol = document.querySelector(".tombol");
+const openDiv = document.getElementById("opening");
+const heartIcon = document.querySelector(".hati");
+const finalTextDiv = document.getElementById("finalText");
+
+// Confetti
+function confettiPinkBlue() {
+  const colors = ["#ff69b4","#6ecbff","#ffdb58","#8a2be2","#00ff7f"];
+  const end = Date.now() + 5000;
+  (function frame() {
+    confetti({ particleCount: 8, angle:60, spread:100, origin:{x:0}, colors, scalar:1 });
+    confetti({ particleCount: 8, angle:120, spread:100, origin:{x:1}, colors, scalar:1 });
+    if(Date.now()<end) requestAnimationFrame(frame);
+  })();
+}
+
+const swalOptions = (options) => ({...options, allowOutsideClick:false, allowEscapeKey:false});
+function typeWriter(element, text, speed=50, callback){let i=0;element.innerHTML="";const interval=setInterval(()=>{element.innerHTML+=text.charAt(i);i++;if(i>=text.length){clearInterval(interval);if(callback)callback();}},speed);}
+
+// Flow pertanyaan
+tombol.addEventListener("click",function(){
+  openDiv.classList.add("animate__fadeOut");
+  setTimeout(()=>openDiv.classList.add("d-none"),600);
+
+  Swal.fire(swalOptions({title:"This page only exists today", text:"Aku punya pertanyaan nii", icon:"question"}))
+  .then(()=>Swal.fire(swalOptions({title:"Jawab jujur yaa Abang"})))
+  .then(()=>Swal.fire(swalOptions({title:"Awasss yaaa kalooo boong nanti kek PINOKIYOWO", icon:"error"})))
+  .then(()=>Swal.fire(swalOptions({title:"Isi namamu yaa", input:"text", inputValidator:value=>value?undefined:"Isi dulu dong, Maksa nih"})))
+  .then(result=>{nama=result.value;return Swal.fire(swalOptions({title:`${nama}, kamu sayang ga sama ${sender}?`, showDenyButton:true, confirmButtonText:"Sayang banget", denyButtonText:"Engga"}))})
+  .then(result=>{if(!result.isConfirmed) throw "sayangNo"; return Swal.fire(swalOptions({title:`${sender} juga sayang banget sama ${nama} ❤️`}))})
+  .then(()=>Swal.fire(swalOptions({title:"Seberapa sayang?", input:"range", inputAttributes:{min:1,max:100}, inputValue:50})))
+  .then(e=>{val=e.value; return Swal.fire(swalOptions({title:`Terima kasih ya ${nama} udah sayang sama ${sender} ${val}% ❤️`}))})
+  .then(()=>Swal.fire(swalOptions({title:`Sekarang ${nama}, kangen ga sama ${sender}?`, showDenyButton:true, confirmButtonText:"Kangen :(", denyButtonText:"Engga :)"})))
+  .then(res=>{if(!res.isConfirmed) throw "kangenNo"; return Swal.fire(swalOptions({title:`Huhu iyaaa ${sender} juga kangen banget sama ${nama} 🥺❤️`}))})
+  .then(()=>Swal.fire(swalOptions({title:"Sekarang klik ikon hati di bawah ya"})))
+  .then(()=>{heartIcon.classList.remove("disabled-heart"); heartUnlocked=true;})
+  .catch(err=>{
+    if(err==="sayangNo"){Swal.fire(swalOptions({title:"OK Cukup Tempe, Aku PUNDUNG", icon:"error"}));}
+    else if(err==="kangenNo"){Swal.fire(swalOptions({title:"OH GT, YDH PUNDUNG JILID 2", icon:"error"}));}
+  });
+});
+
+// Cake + cream drip + lilin angka + balon + typewriter
+function showCakeAndFinalText(){
+  const wrapper=document.createElement('div'); wrapper.className='celebration-wrapper';
+  document.body.appendChild(wrapper);
+
+  const cakeDiv=document.createElement('div'); cakeDiv.className='cake'; wrapper.appendChild(cakeDiv);
+
+  // Layers
+  const layer1=document.createElement('div'); layer1.className='cake-layer-top';
+  const cream=document.createElement('div'); cream.className='cream-leak';
+  layer1.appendChild(cream);
+  const layer2=document.createElement('div'); layer2.className='cake-layer-middle';
+  const layer3=document.createElement('div'); layer3.className='cake-base';
+  cakeDiv.appendChild(layer1); cakeDiv.appendChild(layer2); cakeDiv.appendChild(layer3);
+
+  // Lilin angka
+  const candleNumber = document.createElement('div'); candleNumber.className='candle-number'; candleNumber.innerText='28';
+  cakeDiv.appendChild(candleNumber);
+
+  // Balon naik
+  for(let i=0;i<10;i++){
+    const balloon=document.createElement('div'); balloon.className='balloon';
+    balloon.style.left=(Math.random()*90)+'vw';
+    balloon.style.backgroundColor=['#ff69b4','#6ecbff','#ffdb58','#8a2be2','#00ff7f'][Math.floor(Math.random()*5)];
+    wrapper.appendChild(balloon);
+    animateBalloon(balloon);
+  }
+
+  function animateBalloon(balloon){
+    let top=-50;
+    const id=setInterval(()=>{
+      top+=2;
+      balloon.style.bottom=top+'px';
+      if(top>window.innerHeight){balloon.remove(); clearInterval(id);}
+    },30);
+  }
+
+  const birthdayText=document.createElement('div'); birthdayText.className='birthday-text'; birthdayText.innerText='Happy Birthday! 🎉';
+  wrapper.appendChild(birthdayText);
+  wrapper.appendChild(finalTextDiv);
+
+  // Animasi bertahap cake + cream + birthday text
+  setTimeout(()=>layer1.style.opacity=1, 500);
+  setTimeout(()=>cream.style.opacity=1, 600);
+  setTimeout(()=>layer2.style.opacity=1, 1200);
+  setTimeout(()=>layer3.style.opacity=1, 1900);
+  setTimeout(()=>candleNumber.style.opacity=1, 2500);
+  setTimeout(()=>birthdayText.style.opacity=1, 3000);
+
+  // Teks terakhir muncul per baris
+  setTimeout(()=>{
+    finalTextDiv.style.display='block';
+    const lines = [
+      "Aku sayang kamu Abang 💖",
+      "This little chaos exists only today.",
+      "#EdoAtAnotherCandleDay",
+      "The next clue is waiting for you on WhatsApp."
+    ];
+    finalTextDiv.innerHTML = "";
+    let i = 0;
+    function typeLine() {
+      if (i >= lines.length) { finalTextShown = true; return; }
+      typeWriter(finalTextDiv, lines[i], 50, ()=>{
+        finalTextDiv.innerHTML += "<br>";
+        i++;
+        setTimeout(typeLine, 300);
+      });
+    }
+    typeLine();
+  }, 3800);
+}
+
+// Klik hati
+heartIcon.addEventListener("click",function(){
+  if(!heartUnlocked) return;
+  confettiPinkBlue();
+  if(!finalTextShown){tombol.classList.add("d-none"); showCakeAndFinalText();}
+});
+</script>
+</body>
+</html>
