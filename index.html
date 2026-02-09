@@ -209,7 +209,7 @@ tombol.addEventListener("click",function(){
   .then(result=>{if(!result.isConfirmed) throw "sayangNo"; return Swal.fire(swalOptions({title:`${sender} juga sayang banget sama abang ${nama} ❤️`}))})
   .then(()=>Swal.fire(swalOptions({title:"Seberapa sayang?", input:"range", inputAttributes:{min:1,max:100}, inputValue:50})))
   .then(e=>{val=e.value; return Swal.fire(swalOptions({title:`Terima kasih ya abang ${nama} udah sayang sama ${sender} ${val}% ❤️`}))})
-  .then(()=>Swal.fire(swalOptions({title:`Sekarang ${nama}, kangen ga sama ${sender}?`, showDenyButton:true, confirmButtonText:"Kangen :(", denyButtonText:"Engga :)"})))
+  .then(()=>Swal.fire(swalOptions({title:`Sekarang abang ${nama}, kangen ga sama ${sender}?`, showDenyButton:true, confirmButtonText:"Kangen :(", denyButtonText:"Engga :)"})))
   .then(res=>{if(!res.isConfirmed) throw "kangenNo"; return Swal.fire(swalOptions({title:`Huhu iyaaa ${sender} juga kangen banget sama abang ${nama} 🥺❤️`}))})
   .then(()=>Swal.fire(swalOptions({title:"Sekarang klik ikon hati di bawah ya"})))
   .then(()=>{heartIcon.classList.remove("disabled-heart"); heartUnlocked=true;})
@@ -300,6 +300,7 @@ heartIcon.addEventListener("click",function(){
 </script>
 </body>
 </html>
+
 
 
 
