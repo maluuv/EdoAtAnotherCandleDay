@@ -172,12 +172,12 @@ tombol.addEventListener("click",function(){
   .then(()=>Swal.fire(swalOptions({title:"Jawab jujur yaa Abang"})))
   .then(()=>Swal.fire(swalOptions({title:"Awasss yaaa kalooo boong nanti kek PINOKIYOWO", icon:"error"})))
   .then(()=>Swal.fire(swalOptions({title:"Isi namamu yaa", input:"text", inputValidator:value=>value?undefined:"Isi dulu dong, Maksa nih"})))
-  .then(result=>{nama=result.value;return Swal.fire(swalOptions({title:`${nama}, kamu sayang ga sama ${sender}?`, showDenyButton:true, confirmButtonText:"Sayang banget", denyButtonText:"Engga"}))})
+  .then(result=>{nama=result.value;return Swal.fire(swalOptions({title:`${nama}, kamu sayang ga sama abang ${sender}?`, showDenyButton:true, confirmButtonText:"Sayang banget", denyButtonText:"Engga"}))})
   .then(result=>{if(!result.isConfirmed) throw "sayangNo"; return Swal.fire(swalOptions({title:`${sender} juga sayang banget sama ${nama} ❤️`}))})
   .then(()=>Swal.fire(swalOptions({title:"Seberapa sayang?", input:"range", inputAttributes:{min:1,max:100}, inputValue:50})))
-  .then(e=>{val=e.value; return Swal.fire(swalOptions({title:`Terima kasih ya ${nama} udah sayang sama ${sender} ${val}% ❤️`}))})
+  .then(e=>{val=e.value; return Swal.fire(swalOptions({title:`Terima kasih ya abang ${nama} udah sayang sama ${sender} ${val}% ❤️`}))})
   .then(()=>Swal.fire(swalOptions({title:`Sekarang ${nama}, kangen ga sama ${sender}?`, showDenyButton:true, confirmButtonText:"Kangen :(", denyButtonText:"Engga :)"})))
-  .then(res=>{if(!res.isConfirmed) throw "kangenNo"; return Swal.fire(swalOptions({title:`Huhu iyaaa ${sender} juga kangen banget sama ${nama} 🥺❤️`}))})
+  .then(res=>{if(!res.isConfirmed) throw "kangenNo"; return Swal.fire(swalOptions({title:`Huhu iyaaa ${sender} juga kangen banget sama abang ${nama} 🥺❤️`}))})
   .then(()=>Swal.fire(swalOptions({title:"Sekarang klik ikon hati di bawah ya"})))
   .then(()=>{heartIcon.classList.remove("disabled-heart"); heartUnlocked=true;})
   .catch(err=>{
@@ -267,3 +267,4 @@ heartIcon.addEventListener("click",function(){
 </script>
 </body>
 </html>
+
