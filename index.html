@@ -99,6 +99,39 @@
     border-radius: 50%;
     opacity: 0.9;
   }
+  
+  /* === FIX DARK MODE TANPA UBAH HTML === */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0f0f14 !important;
+    color: #ffffff !important;
+  }
+
+  .kotak,
+  .final-text,
+  .birthday-text,
+  #opening {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  }
+
+  small,
+  p,
+  h4 {
+    color: #dddddd !important;
+  }
+
+  footer {
+    background: rgba(0,0,0,0.6);
+  }
+
+  .btn-primary {
+    background-color: #ff69b4;
+    border-color: #ff69b4;
+    color: #ffffff;
+  }
+}
+
 </style>
 </head>
 
@@ -267,5 +300,6 @@ heartIcon.addEventListener("click",function(){
 </script>
 </body>
 </html>
+
 
 
