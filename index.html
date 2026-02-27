@@ -1,274 +1,492 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>#EdoAtAnotherCandleDay</title>
-
-<!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.8.1/dist/sweetalert2.min.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>#EdoAtAnotherCandleDay FINAL</title>
 
 <style>
-  .kotak { margin-top: 180px; }
-  .disabled-heart { pointer-events: none; opacity: 0.4; }
+body{
+  margin:0;
+  font-family:monospace;
+  overflow:hidden;
+  background:#07121f;
+  color:#00e5ff;
+}
+.screen{
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  transition:opacity .5s;
+}
+.hidden{opacity:0;pointer-events:none;}
+button{
+  background:transparent;
+  border:1px solid #00e5ff;
+  color:#00e5ff;
+  padding:6px 16px;
+  margin:5px;
+  cursor:pointer;
+}
+input{
+  background:transparent;
+  border:1px solid #00e5ff;
+  color:#00e5ff;
+  padding:4px;
+  text-align:center;
+  font-size:18px;
+}
 
-  .celebration-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 30px;
-  }
+.pad{
+  display:grid;
+  grid-template-columns:repeat(3,60px);
+  gap:10px;
+  margin-top:15px;
+}
+.pad button{
+  height:45px;
+  font-size:16px;
+}
 
-  /* Cake */
-  .cake { position: relative; width: 180px; margin-bottom: 20px; }
-  .cake-layer-top {
-    position: relative;
-    width: 150px;
-    height: 30px;
-    margin: 0 auto;
-    border-radius: 15px 15px 10px 10px;
-    background: linear-gradient(145deg, #ffb6c1, #ff69b4);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    opacity:0; transition: opacity 0.5s;
-  }
-  .cake-layer-middle {
-    width: 140px;
-    height: 25px;
-    margin: 0 auto;
-    border-radius: 12px 12px 8px 8px;
-    background: linear-gradient(145deg, #ffc0cb, #ff69b4);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    opacity:0; transition: opacity 0.5s;
-  }
-  .cake-base {
-    width: 180px;
-    height: 25px;
-    margin: 0 auto;
-    border-radius: 10px;
-    background: linear-gradient(145deg, #8b4513, #a0522d);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-    opacity:0; transition: opacity 0.5s;
-  }
+/* ===== CLAW ===== */
+.machine{width:300px;height:300px;background:linear-gradient(145deg,#0d2b45,#06121f);border-radius:20px;border:2px solid #00e5ff;position:relative;overflow:hidden;margin:20px;}
+.face{position:absolute;top:20px;width:100%;height:80px;}
+.eye{width:18px;height:18px;background:#00e5ff;border-radius:50%;position:absolute;top:10px;animation:blink 4s infinite;}
+.left-eye{left:110px;}
+.right-eye{right:110px;}
+@keyframes blink{0%,90%,100%{height:18px;}95%{height:2px;}}
+.blush{width:22px;height:12px;background:pink;border-radius:50%;position:absolute;top:35px;opacity:.6;}
+.left-blush{left:80px;}
+.right-blush{right:80px;}
+.mouth{width:40px;height:20px;border-bottom:3px solid #00e5ff;border-radius:0 0 40px 40px;position:absolute;left:50%;transform:translateX(-50%);top:45px;}
+.mouth.sad{border-bottom:3px solid #ff004c;border-radius:40px 40px 0 0;top:50px;}
+.claw{width:40px;height:40px;border:2px solid #00e5ff;position:absolute;top:100px;left:130px;transition:left .3s, top .6s;}
+.items{position:absolute;bottom:10px;width:100%;display:flex;justify-content:space-around;font-size:30px;}
 
-  /* Cream drip */
-  .cream-leak {
-    position: absolute;
-    top: -10px;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    background: linear-gradient(to bottom, #fffacd, #fff);
-    border-radius: 50% 50% 50% 50%;
-    box-shadow: inset 0 -4px 6px rgba(255,255,255,0.6);
-    z-index: 1;
-    opacity:0; transition: opacity 0.5s;
-  }
+/* ===== MEMORY ===== */
+.orbs{display:grid;grid-template-columns:repeat(2,80px);gap:20px;}
+.orb{width:80px;height:80px;border-radius:50%;background:#003344;cursor:pointer;}
+.orb.active{background:#00e5ff;transition:0.3s;}
 
-  /* Lilin angka */
-  .candle-number {
-    font-size: 36px;
-    font-weight: bold;
-    color: #ff4500;
-    position: absolute;
-    top: -45px;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity:0;
-    animation: flicker 0.5s infinite alternate;
-    text-shadow: 0 0 10px #ffd700, 0 0 15px #ffa500;
-  }
+/* ===== TREASURE ===== */
+.map{width:300px;height:400px;margin-top:20px;background:linear-gradient(#0d1b2a,#1b263b);border-radius:20px;position:relative;overflow:hidden;box-shadow:0 0 40px #00b4ff inset;}
+.bg{position:absolute;width:120%;height:120%;top:-10%;left:-10%;pointer-events:none;}
+.layer1{background:radial-gradient(#00b4ff22 1px,transparent 1px);background-size:40px 40px;animation:moveSlow 20s linear infinite;}
+.layer2{background:radial-gradient(#00e5ff33 2px,transparent 2px);background-size:80px 80px;animation:moveFast 12s linear infinite;}
+@keyframes moveSlow{from{transform:translate(0,0);}to{transform:translate(-100px,-100px);}}
+@keyframes moveFast{from{transform:translate(0,0);}to{transform:translate(-200px,-200px);}}
+.location{width:26px;height:26px;border-radius:50%;background:#00b4ff;position:absolute;cursor:pointer;box-shadow:0 0 15px #00e5ff;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
+.chest{position:absolute;top:60%;left:55%;transform:translate(-50%,-50%);width:80px;height:60px;}
+.box{width:100%;height:40px;background:#8b5e3c;border-radius:6px;position:absolute;bottom:0;}
+.lid{width:100%;height:25px;background:#a97449;border-radius:6px 6px 0 0;position:absolute;top:0;transform-origin:bottom center;transition:0.6s ease;}
+.chest.open .lid{transform:rotateX(120deg);}
+.diamond{position:absolute;top:60%;left:55%;transform:translate(-50%,-50%);font-size:40px;}
+.particle{position:absolute;width:6px;height:6px;background:#00e5ff;border-radius:50%;pointer-events:none;animation:explode 1s ease forwards;}
+@keyframes explode{to{transform:translate(var(--x),var(--y));opacity:0;}}
 
-  @keyframes flicker {
-    0% { color: orange; text-shadow: 0 0 5px yellow; }
-    50% { color: gold; text-shadow: 0 0 10px yellow; }
-    100% { color: orange; text-shadow: 0 0 5px yellow; }
-  }
+/* ===== EMOTIONAL ===== */
+.heart{position:absolute;font-size:18px;animation:floatHeart 1.5s ease forwards;}
+@keyframes floatHeart{from{transform:translateY(0);opacity:1;}to{transform:translateY(-60px);opacity:0;}}
 
-  .birthday-text { font-size: 28px; font-weight: bold; margin-top: 15px; opacity:0; transition: opacity 0.5s; }
-  .final-text { display: none; text-align: center; font-size: 28px; line-height:1.6; font-weight:bold; }
-
-  /* Balon */
-  .balloon {
-    position: absolute;
-    bottom: -50px;
-    width: 30px;
-    height: 40px;
-    border-radius: 50%;
-    opacity: 0.9;
-  }
+/* ===== GLITCH ===== */
+.glitch{font-size:32px;font-weight:bold;animation:flicker .12s infinite;}
+@keyframes flicker{0%{opacity:1;}50%{opacity:.6;}100%{opacity:1;}}
+.crash{background:black;color:#ff2e2e;font-size:20px;}
+.cake{font-size:80px;cursor:pointer;}
 </style>
 </head>
-
 <body>
-<div class="container">
-  <div class="row">
-    <div class="col-lg text-center kotak">
-      <div id="opening" class="mb-4 animate__animated animate__fadeIn">
-        <h4>Hi Abang.</h4>
-        <p>If you’re here, you followed the clues correctly.<br />Welcome to your day.</p>
-        <small class="text-muted">#EdoAtAnotherCandleDay</small>
-      </div>
 
-      <button type="button" class="btn btn-lg btn-primary tombol py-4 px-5 shadow">Click here!</button>
+<!-- ===================== SCREENS ===================== -->
 
-      <div id="finalText" class="final-text">
-        Aku sayang kamu Abang 💖<br />
-        This little chaos exists only today.<br />
-        #EdoAtAnotherCandleDay<br /><br />
-        The next clue is Some things are written, not played..
-      </div>
+<!-- OPENING -->
+<div class="screen" id="openingScreen">
+  <div id="openingText" style="white-space:pre-line;"></div>
+  <button id="enterBtn" class="hidden">ENTER</button>
+</div>
+
+<!-- PROTOCOL -->
+<div class="screen hidden" id="protocolScreen">
+  <h2>BLUE NIGHT PROTOCOL<br>Performance Required.</h2>
+  <button onclick="switchScreen('protocolScreen','nameGate')">INITIATE</button>
+</div>
+
+<!-- NAME GATE -->
+<div class="screen hidden" id="nameGate">
+  <h3>Identity Required</h3>
+  <input id="nameInput" placeholder="Enter Name">
+  <br>
+  <button onclick="checkName()">ENTER</button>
+</div>
+
+<!-- CLAW -->
+<div class="screen hidden" id="clawScreen">
+  <h3>Retrieve the Access Token</h3>
+  <div class="machine">
+    <div class="face">
+      <div class="eye left-eye"></div>
+      <div class="eye right-eye"></div>
+      <div class="blush left-blush"></div>
+      <div class="blush right-blush"></div>
+      <div class="mouth"></div>
     </div>
+    <div class="claw" id="claw"></div>
+    <div class="items">
+      <div>⭐</div><div>🎁</div><div id="target">💎</div><div>🧸</div>
+    </div>
+  </div>
+  <div>
+    <button onclick="left()">◀</button>
+    <button onclick="drop()">DROP</button>
+    <button onclick="right()">▶</button>
   </div>
 </div>
 
-<footer class="fixed-bottom text-center py-3 text-secondary">
-  <small>
-    Made with
-    <i class="fas fa-heart text-danger animate__animated animate__heartBeat animate__repeat-3 hati disabled-heart"></i>
-    by LOVE
-  </small>
-</footer>
+<!-- MEMORY -->
+<div class="screen hidden" id="memoryScreen">
+  <h3>Memory Calibration</h3>
+  <div class="orbs">
+    <div class="orb" data-id="0"></div>
+    <div class="orb" data-id="1"></div>
+    <div class="orb" data-id="2"></div>
+    <div class="orb" data-id="3"></div>
+  </div>
+</div>
 
-<script src="https://kit.fontawesome.com/61e5120832.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.8.1/dist/sweetalert2.all.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<!-- CODE -->
+<div class="screen hidden" id="codeScreen">
+  <h3>Enter Vault Code (∞ ∞)</h3>
+  <input id="codeInput" placeholder="__" readonly>
+
+  <div class="pad">
+    <button onclick="pressPad(1)">1</button>
+    <button onclick="pressPad(2)">2</button>
+    <button onclick="pressPad(3)">3</button>
+
+    <button onclick="pressPad(4)">4</button>
+    <button onclick="pressPad(5)">5</button>
+    <button onclick="pressPad(6)">6</button>
+
+    <button onclick="pressPad(7)">7</button>
+    <button onclick="pressPad(8)">8</button>
+    <button onclick="pressPad(9)">9</button>
+
+    <button onclick="backspace()">←</button>
+    <button onclick="pressPad(0)">0</button>
+    <button onclick="submitCode()">OK</button>
+  </div>
+</div>
+
+<!-- TREASURE -->
+<div class="screen hidden" id="treasureScreen">
+  <h2>Treasure Hunt</h2>
+  <div class="map" id="map">
+    <div class="bg layer1"></div>
+    <div class="bg layer2"></div>
+
+    <div class="location" style="top:18%;left:15%;" onclick="wrongClick()"></div>
+    <div class="location" style="top:28%;left:70%;" onclick="wrongClick()"></div>
+    <div class="location" style="top:60%;left:55%;" onclick="correctClick()"></div>
+
+    <div class="chest hidden" id="chest">
+      <div class="lid"></div>
+      <div class="box"></div>
+    </div>
+
+    <div class="diamond hidden" id="diamond">💎</div>
+  </div>
+  <div id="message"></div>
+</div>
+
+<!-- EMOTIONAL -->
+<div class="screen hidden" id="emotionalScreen">
+  <h2>Emotional Authentication</h2>
+
+  <p>Kangen gak?</p>
+  <button onclick="answerKangen(true)">Kangen 💙</button>
+  <button onclick="answerKangen(false)">Engga</button>
+
+  <p>Seberapa sayang?</p>
+  <input type="range" id="loveSlider" min="0" max="100" value="50">
+  <div id="loveValue">50%</div>
+
+  <button onclick="validateEmotional()">Unlock 💙</button>
+  <div id="emotionalMsg"></div>
+</div>
+
+<!-- SUDDEN (LAMA) -->
+<div class="screen hidden" id="suddenScreen"></div>
+
+<!-- CRASH (LAMA) -->
+<div class="screen hidden crash" id="crashScreen">
+  <div id="crashText"></div>
+</div>
+
+<!-- CAKE (LAMA) -->
+<div class="screen hidden" id="cakeScreen">
+  <div class="cake" onclick="blowCandle()">🎂</div>
+  <p>Click cake</p>
+</div>
+
+<!-- LETTER (LAMA) -->
+<div class="screen hidden" id="letterScreen">
+  <h2>💌</h2>
+  <div id="realLetter"></div>
+</div>
+
+<div id="hiddenMessage" style="
+position:fixed;
+bottom:10px;
+right:10px;
+font-size:10px;
+opacity:.05;
+cursor:pointer;">
+stay curious.
+</div>
+
+<!-- FINAL SHUTDOWN -->
+<div class="screen hidden" id="finalScreen">
+  <div class="glitch">SESSION COMPLETE</div>
+  <p style="margin-top:20px;">Tap to close.</p>
+</div>
+
+<!-- FINAL HIDDEN MESSAGE -->
+<div class="screen hidden" id="trueEnd">
+  <h1 style="color:#ff4da6;">💖</h1>
+  <h2>One More Thing...</h2>
+  <p style="max-width:300px;">
+    You thought it was over?
+    <br><br>
+    I just wanted to say...
+    <br><br>
+    I'm really, really grateful you're here. see u on whatsapp for another clue
+  </p>
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
 
 <script>
-let nama, val;
-const url = new URL(document.URL);
-const sender = url.searchParams.get("by") || "ataa";
-let heartUnlocked = false;
-let finalTextShown = false;
 
-const tombol = document.querySelector(".tombol");
-const openDiv = document.getElementById("opening");
-const heartIcon = document.querySelector(".hati");
-const finalTextDiv = document.getElementById("finalText");
-
-// Confetti
-function confettiPinkBlue() {
-  const colors = ["#ff69b4","#6ecbff","#ffdb58","#8a2be2","#00ff7f"];
-  const end = Date.now() + 5000;
-  (function frame() {
-    confetti({ particleCount: 8, angle:60, spread:100, origin:{x:0}, colors, scalar:1 });
-    confetti({ particleCount: 8, angle:120, spread:100, origin:{x:1}, colors, scalar:1 });
-    if(Date.now()<end) requestAnimationFrame(frame);
-  })();
+/* SCREEN SWITCH */
+function switchScreen(from,to){
+  document.getElementById(from).classList.add("hidden");
+  document.getElementById(to).classList.remove("hidden");
 }
 
-const swalOptions = (options) => ({...options, allowOutsideClick:false, allowEscapeKey:false});
-function typeWriter(element, text, speed=50, callback){let i=0;element.innerHTML="";const interval=setInterval(()=>{element.innerHTML+=text.charAt(i);i++;if(i>=text.length){clearInterval(interval);if(callback)callback();}},speed);}
-
-// Flow pertanyaan
-tombol.addEventListener("click",function(){
-  openDiv.classList.add("animate__fadeOut");
-  setTimeout(()=>openDiv.classList.add("d-none"),600);
-
-  Swal.fire(swalOptions({title:"This page only exists today", text:"Aku punya pertanyaan nii", icon:"question"}))
-  .then(()=>Swal.fire(swalOptions({title:"Jawab jujur yaa Abang"})))
-  .then(()=>Swal.fire(swalOptions({title:"Awasss yaaa kalooo boong nanti kek PINOKIYOWO", icon:"error"})))
-  .then(()=>Swal.fire(swalOptions({title:"Isi namamu yaa", input:"text", inputValidator:value=>value?undefined:"Isi dulu dong, Maksa nih"})))
-  .then(result=>{nama=result.value;return Swal.fire(swalOptions({title:`abang ${nama}, kamu sayang ga sama ${sender}?`, showDenyButton:true, confirmButtonText:"Sayang banget", denyButtonText:"Engga"}))})
-  .then(result=>{if(!result.isConfirmed) throw "sayangNo"; return Swal.fire(swalOptions({title:`${sender} juga sayang banget sama abang ${nama} ❤️`}))})
-  .then(()=>Swal.fire(swalOptions({title:"Seberapa sayang?", input:"range", inputAttributes:{min:1,max:100}, inputValue:50})))
-  .then(e=>{val=e.value; return Swal.fire(swalOptions({title:`Terima kasih ya abang ${nama} udah sayang sama ${sender} ${val}% ❤️`}))})
-  .then(()=>Swal.fire(swalOptions({title:`Sekarang abang ${nama}, kangen ga sama ${sender}?`, showDenyButton:true, confirmButtonText:"Kangen :(", denyButtonText:"Engga :)"})))
-  .then(res=>{if(!res.isConfirmed) throw "kangenNo"; return Swal.fire(swalOptions({title:`Huhu iyaaa ${sender} juga kangen banget sama abang ${nama} 🥺❤️`}))})
-  .then(()=>Swal.fire(swalOptions({title:"Sekarang klik ikon hati di bawah ya"})))
-  .then(()=>{heartIcon.classList.remove("disabled-heart"); heartUnlocked=true;})
-  .catch(err=>{
-    if(err==="sayangNo"){Swal.fire(swalOptions({title:"OK Cukup Tempe, Aku PUNDUNG", icon:"error"}));}
-    else if(err==="kangenNo"){Swal.fire(swalOptions({title:"OH GT, YDH PUNDUNG JILID 2", icon:"error"}));}
-  });
-});
-
-// Cake + cream drip + lilin angka + balon + typewriter
-function showCakeAndFinalText(){
-  const wrapper=document.createElement('div'); wrapper.className='celebration-wrapper';
-  document.body.appendChild(wrapper);
-
-  const cakeDiv=document.createElement('div'); cakeDiv.className='cake'; wrapper.appendChild(cakeDiv);
-
-  // Layers
-  const layer1=document.createElement('div'); layer1.className='cake-layer-top';
-  const cream=document.createElement('div'); cream.className='cream-leak';
-  layer1.appendChild(cream);
-  const layer2=document.createElement('div'); layer2.className='cake-layer-middle';
-  const layer3=document.createElement('div'); layer3.className='cake-base';
-  cakeDiv.appendChild(layer1); cakeDiv.appendChild(layer2); cakeDiv.appendChild(layer3);
-
-  // Lilin angka
-  const candleNumber = document.createElement('div'); candleNumber.className='candle-number'; candleNumber.innerText='28';
-  cakeDiv.appendChild(candleNumber);
-
-  // Balon naik
-  for(let i=0;i<10;i++){
-    const balloon=document.createElement('div'); balloon.className='balloon';
-    balloon.style.left=(Math.random()*90)+'vw';
-    balloon.style.backgroundColor=['#ff69b4','#6ecbff','#ffdb58','#8a2be2','#00ff7f'][Math.floor(Math.random()*5)];
-    wrapper.appendChild(balloon);
-    animateBalloon(balloon);
-  }
-
-  function animateBalloon(balloon){
-    let top=-50;
-    const id=setInterval(()=>{
-      top+=2;
-      balloon.style.bottom=top+'px';
-      if(top>window.innerHeight){balloon.remove(); clearInterval(id);}
-    },30);
-  }
-
-  const birthdayText=document.createElement('div'); birthdayText.className='birthday-text'; birthdayText.innerText='Happy Birthday! 🎉';
-  wrapper.appendChild(birthdayText);
-  wrapper.appendChild(finalTextDiv);
-
-  // Animasi bertahap cake + cream + birthday text
-  setTimeout(()=>layer1.style.opacity=1, 500);
-  setTimeout(()=>cream.style.opacity=1, 600);
-  setTimeout(()=>layer2.style.opacity=1, 1200);
-  setTimeout(()=>layer3.style.opacity=1, 1900);
-  setTimeout(()=>candleNumber.style.opacity=1, 2500);
-  setTimeout(()=>birthdayText.style.opacity=1, 3000);
-
-  // Teks terakhir muncul per baris
-  setTimeout(()=>{
-    finalTextDiv.style.display='block';
-    const lines = [
-      "Aku sayang kamu Abang 💖",
-      "This little chaos exists only today.",
-      "#EdoAtAnotherCandleDay",
-      "The next clue is waiting for you on WhatsApp."
-    ];
-    finalTextDiv.innerHTML = "";
-    let i = 0;
-    function typeLine() {
-      if (i >= lines.length) { finalTextShown = true; return; }
-      typeWriter(finalTextDiv, lines[i], 50, ()=>{
-        finalTextDiv.innerHTML += "<br>";
-        i++;
-        setTimeout(typeLine, 300);
-      });
+/* OPENING */
+const lines=["Hi, Abang.","If you're here, you followed the clues correctly.","Good.","Welcome to your day.","#EdoAtAnotherCandleDay"];
+let l=0,c=0;
+function typeIntro(){
+  let el=document.getElementById("openingText");
+  if(l<lines.length){
+    if(c<lines[l].length){
+      el.innerHTML+=lines[l][c++];
+      setTimeout(typeIntro,40);
+    }else{
+      el.innerHTML+="<br><br>";
+      l++;c=0;
+      setTimeout(typeIntro,500);
     }
-    typeLine();
-  }, 3800);
+  }else{
+    document.getElementById("enterBtn").classList.remove("hidden");
+    document.getElementById("enterBtn").onclick=()=>switchScreen("openingScreen","protocolScreen");
+  }
+}
+typeIntro();
+
+/* NAME */
+function checkName(){
+  let val=document.getElementById("nameInput").value.trim().toLowerCase();
+  if(val==="edo"){
+    switchScreen("nameGate","clawScreen");
+  }else alert("Access Denied");
 }
 
-// Klik hati
-heartIcon.addEventListener("click",function(){
-  if(!heartUnlocked) return;
-  confettiPinkBlue();
-  if(!finalTextShown){tombol.classList.add("d-none"); showCakeAndFinalText();}
+/* CLAW LOGIC */
+let claw=document.getElementById("claw");
+let target=document.getElementById("target");
+let pos=130;
+
+function left(){ if(pos>60){pos-=30;claw.style.left=pos+"px";} }
+function right(){ if(pos<200){pos+=30;claw.style.left=pos+"px";} }
+
+function drop(){
+  claw.style.top="200px";
+  setTimeout(()=>{
+    if(Math.abs(claw.offsetLeft-target.offsetLeft)<40){
+      target.style.transform="translateY(-150px)";
+      setTimeout(()=>switchScreen('clawScreen','memoryScreen'),1000);
+    }else{
+      claw.style.top="100px";
+      document.querySelector(".mouth").classList.add("sad");
+      setTimeout(()=>document.querySelector(".mouth").classList.remove("sad"),800);
+    }
+  },600);
+}
+
+/* MEMORY */
+let sequence=[],player=[],level=1,canClick=false;
+function nextLevel(){
+  player=[];
+  sequence.push(Math.floor(Math.random()*4));
+  playSequence();
+}
+function playSequence(){
+  canClick=false;
+  let i=0;
+  let interval=setInterval(()=>{
+    let orb=document.querySelector(`.orb[data-id='${sequence[i]}']`);
+    orb.classList.add("active");
+    setTimeout(()=>orb.classList.remove("active"),400);
+    i++;
+    if(i>=sequence.length){
+      clearInterval(interval);
+      setTimeout(()=>canClick=true,500);
+    }
+  },700);
+}
+document.querySelectorAll(".orb").forEach(o=>{
+  o.onclick=function(){
+    if(!canClick)return;
+    let id=parseInt(this.dataset.id);
+    player.push(id);
+    this.classList.add("active");
+    setTimeout(()=>this.classList.remove("active"),300);
+    if(player[player.length-1]!==sequence[player.length-1]){
+      sequence=[];level=1;
+      setTimeout(nextLevel,800);
+      return;
+    }
+    if(player.length===sequence.length){
+      if(level===3){
+        switchScreen("memoryScreen","codeScreen");
+      }else{
+        level++;
+        setTimeout(nextLevel,800);
+      }
+    }
+  }
 });
+nextLevel();
+
+/* CODE */
+function pressPad(n){document.getElementById("codeInput").value+=n;}
+function backspace(){
+  let val=document.getElementById("codeInput").value;
+  document.getElementById("codeInput").value=val.slice(0,-1);
+}
+function submitCode(){
+  if(document.getElementById("codeInput").value==="28"){
+    switchScreen("codeScreen","treasureScreen");
+  }else{
+    alert("Wrong Code");
+    document.getElementById("codeInput").value="";
+  }
+}
+
+/* TREASURE */
+function wrongClick(){
+  document.getElementById("message").innerText="Nothing here...";
+}
+function correctClick(){
+  let chest=document.getElementById("chest");
+  let diamond=document.getElementById("diamond");
+  chest.classList.remove("hidden");
+  chest.classList.add("open");
+  diamond.classList.remove("hidden");
+  setTimeout(()=>switchScreen("treasureScreen","emotionalScreen"),1500);
+}
+
+/* EMOTIONAL */
+let kangenAnswer=false;
+document.getElementById("loveSlider").addEventListener("input",function(){
+  document.getElementById("loveValue").innerText=this.value+"%";
+});
+function answerKangen(val){
+  kangenAnswer=val;
+  document.getElementById("emotionalMsg").innerText=val?"Hehe 💙":"Yakin? 🤨";
+}
+function validateEmotional(){
+  let loveValue=document.getElementById("loveSlider").value;
+  if(!kangenAnswer){
+    document.getElementById("emotionalMsg").innerText="Jawab yang jujur dong 😏";
+    return;
+  }
+  if(loveValue<80){
+    document.getElementById("emotionalMsg").innerText="Sayangnya kurang nih 😭";
+    return;
+  }
+  emotionalSuccess();
+}
+function emotionalSuccess(){
+  document.getElementById("emotionalMsg").innerText="Authentication Complete 💙";
+  setTimeout(()=>{
+    switchScreen("emotionalScreen","suddenScreen");
+    startSudden();
+  },1200);
+}
+
+/* SUDDEN LAMA */
+function startSudden(){
+  const s=document.getElementById("suddenScreen");
+  s.innerHTML='<div class="glitch">ACCESS GRANTED</div>';
+  setTimeout(()=>{s.innerHTML="<h2>FINAL PROTOCOL INITIATING...</h2>";},1500);
+  setTimeout(()=>{fakeCrash();},3000);
+}
+
+/* CRASH LAMA */
+function fakeCrash(){
+  switchScreen("suddenScreen","crashScreen");
+  const t=document.getElementById("crashText");
+  const crashLines=[
+    "SYSTEM FAILURE.",
+    "CORE MEMORY CORRUPTED.",
+    "ATTEMPTING RECOVERY...",
+    "REBOOTING..."
+  ];
+  let i=0;
+  function next(){
+    if(i<crashLines.length){
+      t.innerHTML+=crashLines[i]+"<br>";
+      i++;
+      setTimeout(next,900);
+    }else{
+      setTimeout(()=>switchScreen("crashScreen","cakeScreen"),1500);
+    }
+  }
+  next();
+}
+
+/* CAKE LAMA */
+function blowCandle(){
+  switchScreen("cakeScreen","letterScreen");
+
+  document.getElementById("realLetter").innerText =
+`For You 🤍
+
+You stayed.
+Through every glitch.
+Through every level.
+
+Happy Another Candle Day.
+
+— Always.`;
+
+  setTimeout(()=>{
+    switchScreen("letterScreen","finalScreen");
+  },4000);
+}
+
+document.getElementById("finalScreen").addEventListener("click",function(){
+  switchScreen("finalScreen","trueEnd");
+});
+
 </script>
 </body>
 </html>
-
-
-
-
-
